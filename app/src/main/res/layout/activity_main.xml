@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_marginStart="59dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="269dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="68dp"
+        android:layout_marginTop="23dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="59dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="139dp"
+            android:layout_height="142dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="49dp"
+            android:background="@layout/image_border2"
+            android:cropToPadding="true"
+            android:padding="1dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="137dp"
+            android:layout_height="142dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_marginEnd="34dp"
+            android:background="@layout/image_border2"
+            android:cropToPadding="true"
+            android:padding="1dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteX="231dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="38dp"
+            android:layout_height="35dp"
+
+            android:layout_alignEnd="@+id/imageView2"
+
+            android:layout_below="@+id/imageView"
+            android:layout_marginEnd="-1dp"
+            app:srcCompat="@drawable/icon_photo" />
+
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="99dp"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="203dp"
+        android:background="#28398D"
+        android:text="Challenge"
+        android:textColor="#E7DAD7"
+        tools:layout_editor_absoluteX="143dp"
+        tools:layout_editor_absoluteY="209dp"
+
+        />
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="228dp"
+        android:layout_height="63dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="131dp"
+        android:ems="10"
+        android:maxLines="10"
+        android:inputType="textPersonName"
+        android:text="Your signature is 80%  fake /n accuracy /n loss   "
+        tools:layout_editor_absoluteX="59dp"
+        tools:layout_editor_absoluteY="268dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="18dp">
+
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/sig1"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:srcCompat="@drawable/sig001_01"
+                        android:padding="7dp"
+                        android:cropToPadding="true"
+                        android:background="@layout/image_border"
+                        android:onClick="SelectSignature"
+                        />
+
+
+
+                <ImageView
+                    android:id="@+id/sig2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/sig002_01"
+                    android:padding="7dp"
+                    android:background="@layout/image_border"
+                    android:onClick="SelectSignature"
+                    />
+
+                <ImageView
+                    android:id="@+id/sig3"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/sig002_01"
+                    android:padding="7dp"
+                    android:cropToPadding="true"
+                    android:background="@layout/image_border"
+                    android:onClick="SelectSignature"
+                    />
+
+                <ImageView
+                    android:id="@+id/sig4"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/sig002_01"
+                    android:padding="7dp"
+                    android:cropToPadding="true"
+                    android:background="@layout/image_border"
+                    android:onClick="SelectSignature"
+                    />
+
+                <ImageView
+                    android:id="@+id/sig5"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/sig002_01"
+                    android:padding="7dp"
+                    android:cropToPadding="true"
+                    android:background="@layout/image_border"
+                    android:onClick="SelectSignature"
+                    />
+
+                <ImageView
+                    android:id="@+id/sig6"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/sig002_01"
+                    android:padding="7dp"
+                    android:cropToPadding="true"
+                    android:background="@layout/image_border"
+                    android:onClick="SelectSignature"
+                    />
+
+                <ImageView
+                    android:id="@+id/sig7"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/sig002_01"
+                    android:padding="7dp"
+                    android:cropToPadding="true"
+                    android:background="@layout/image_border"
+                    android:onClick="SelectSignature"
+                    />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+
+
+</RelativeLayout>
