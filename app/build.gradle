@@ -17,7 +17,7 @@ android {
         }
     }
     aaptOptions {
-        noCompress "pb"
+        noCompress "tflite"
     }
 }
 

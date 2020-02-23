@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     static final int GALLERY_IMAGE_CAPTURE = 2;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
     protected Interpreter tffite;
-    private static final String ModelPath ="detection.pb";
+    private static final String ModelPath ="detection.tflite";
     private int[] labelProbArray = {1,2};
 
     @Override
