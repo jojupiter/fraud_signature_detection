@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,8 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.tensorflow.lite.Interpreter;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +53,16 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int GALLERY_IMAGE_CAPTURE = 2;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
+    protected Interpreter tffite;
+    private static final String ModelPath ="detection.pb";
+    private int[] labelProbArray = {1,2};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkAndroidVersion();
+
         Challenge = (Button) findViewById(R.id.button);
         Result = (TextView) findViewById(R.id.result);
         ImageView1 = (ImageView) findViewById(R.id.imageView);
@@ -65,8 +78,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        Challenge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChallengeFunction();
+            }
+        });
 
     }
+
 
 
     private void checkAndroidVersion() {
@@ -221,8 +241,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ChallengeFunction(){
+        Log.e("INCHALLENGE","challenge run");
+        try{
+            tffite= new Interpreter(loadModelFile(MainActivity.this));
+            tffite.run(convertBitmapToBytebuffer(ImageView2),labelProbArray);
+        }catch ( Exception e){
+            Log.e("Tensorflow","LoadModelFile error ",e);
+        }
 
     }
+
+    private ByteBuffer convertBitmapToBytebuffer(ImageView Img){
+        BitmapDrawable drawable= (BitmapDrawable)Img.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        int bytes= bitmap.getByteCount();
+        ByteBuffer buffer= ByteBuffer.allocate(bytes);
+        bitmap.copyPixelsToBuffer(buffer);
+        byte[] array = buffer.array();
+        return buffer;
+
+    }
+    private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
+        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(ModelPath);
+        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel = inputStream.getChannel();
+        long startOffset = fileDescriptor.getStartOffset();
+        long declaredLength = fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+    }
+
 
     public void SelectSignature(View view){
   ImageView  ImageviewTmp = (ImageView)view;
