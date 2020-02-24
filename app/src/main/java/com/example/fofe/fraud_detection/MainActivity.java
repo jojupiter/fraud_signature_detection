@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -55,20 +56,28 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
     protected Interpreter tffite;
     private static final String ModelPath ="detection.tflite";
-    private int[] labelProbArray = {1,2};
+   // private int[] labelProbArray = {1,2};
+    private ArrayList<String> labels = new ArrayList<>();
+    private int BATCH_SIZE=1;
+    private int MODEL_INPUT=150;
+    private int PIXEL_SIZE=3;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkAndroidVersion();
-
+        labels.add("forg");
+        labels.add("genuine");
         Challenge = (Button) findViewById(R.id.button);
         Result = (TextView) findViewById(R.id.result);
         ImageView1 = (ImageView) findViewById(R.id.imageView);
         ImageView2 = (ImageView) findViewById(R.id.imageView2);
         DBsignature = (TextView) findViewById(R.id.textView);
         FraudSignatute = (TextView) findViewById(R.id.textView2);
+        Result =(TextView)findViewById(R.id.result);
         Takepicture = (ImageButton) findViewById(R.id.imageButton);
         Takepicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,15 +252,42 @@ public class MainActivity extends AppCompatActivity {
     private void ChallengeFunction(){
         Log.e("INCHALLENGE","challenge run");
         try{
+
+           // float [][] result = new float[1][labels.size()];
+
+            float [][] result = new float[1][1];
             tffite= new Interpreter(loadModelFile(MainActivity.this));
-            tffite.run(convertBitmapToBytebuffer(ImageView2),labelProbArray);
+            tffite.run(convertBitmapToBytebuffer(ImageView2),result);
+            List<Recognition>l= getSortedResultFloat(result);
+            Result.setText(""+l.get(0).probability);
+
         }catch ( Exception e){
             Log.e("Tensorflow","LoadModelFile error ",e);
         }
 
     }
 
+
+    private List<Recognition> getSortedResultFloat(float[][] labelProbArray) {
+
+String g = "genuine";
+         ArrayList<Recognition> recognitions = new ArrayList<>();
+
+        for (int i = 0; i < labels.size(); ++i) {
+            float confidence = labelProbArray[0][i];
+             recognitions.add(new Recognition(g,confidence));
+            }
+
+
+        return recognitions;
+    }
+
+
+
+
+
     private ByteBuffer convertBitmapToBytebuffer(ImageView Img){
+/*
         BitmapDrawable drawable= (BitmapDrawable)Img.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
         int bytes= bitmap.getByteCount();
@@ -259,6 +295,51 @@ public class MainActivity extends AppCompatActivity {
         bitmap.copyPixelsToBuffer(buffer);
         byte[] array = buffer.array();
         return buffer;
+/*
+        BitmapDrawable drawable= (BitmapDrawable)Img.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        ByteBuffer imgData= null;
+        imgData.rewind();
+        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        // Convert the image to floating point.
+        int pixel = 0;
+        long startTime = SystemClock.uptimeMillis();
+        for (int i = 0; i < getImageSizeX(); ++i) {
+            for (int j = 0; j < getImageSizeY(); ++j) {
+                final int val = intValues[pixel++];
+                addPixelValue(val);
+            }
+        }
+        long endTime = SystemClock.uptimeMillis();
+        LOGGER.v("Timecost to put values into ByteBuffer: " + (endTime - startTime));
+
+*/
+
+        BitmapDrawable drawable= (BitmapDrawable)Img.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        Bitmap.createScaledBitmap(bitmap,150,150,false);
+        ByteBuffer imgData= ByteBuffer.allocate(BATCH_SIZE*MODEL_INPUT*MODEL_INPUT*4*PIXEL_SIZE);
+        imgData.order(ByteOrder.nativeOrder());
+        int[] intValues = new int[150* 150];
+        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        int pixel = 0;
+        for (int i = 0; i < MODEL_INPUT; ++i) {
+            for (int j = 0; j < MODEL_INPUT; ++j) {
+                final int val = intValues[pixel++];
+
+
+                    imgData.putFloat((((val >> 16) & 0xFF))/255f);
+                    imgData.putFloat((((val >> 8) & 0xFF))/255f);
+                    imgData.putFloat((((val) & 0xFF))/255f);
+
+
+            }
+        }
+        return imgData;
+
+
+
+
 
     }
     private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
